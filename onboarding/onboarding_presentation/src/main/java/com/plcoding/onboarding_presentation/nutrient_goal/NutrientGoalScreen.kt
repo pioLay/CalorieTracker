@@ -35,6 +35,7 @@ fun NutrientGoalScreen(
                         message = event.message.asString(context)
                     )
                 }
+
                 else -> Unit
             }
         }
@@ -57,6 +58,9 @@ fun NutrientGoalScreen(
             UnitTextField(
                 value = viewModel.state.carbsRatio,
                 onValueChange = {
+                    viewModel.onEvent(NutrientGoalEvent.OnCarbRatioChanged(it))
+                },
+                onValueEnter = {
                     viewModel.onEvent(NutrientGoalEvent.OnCarbRatioEnter(it))
                 },
                 unit = stringResource(id = R.string.percent_carbs)
@@ -65,7 +69,11 @@ fun NutrientGoalScreen(
             UnitTextField(
                 value = viewModel.state.proteinRatio,
                 onValueChange = {
+                    viewModel.onEvent(NutrientGoalEvent.OnProteinRatioChanged(it))
+                },
+                onValueEnter = {
                     viewModel.onEvent(NutrientGoalEvent.OnProteinRatioEnter(it))
+
                 },
                 unit = stringResource(id = R.string.percent_proteins)
             )
@@ -73,6 +81,9 @@ fun NutrientGoalScreen(
             UnitTextField(
                 value = viewModel.state.fatRatio,
                 onValueChange = {
+                    viewModel.onEvent(NutrientGoalEvent.OnFatRatioChanged(it))
+                },
+                onValueEnter = {
                     viewModel.onEvent(NutrientGoalEvent.OnFatRatioEnter(it))
                 },
                 unit = stringResource(id = R.string.percent_fats)
