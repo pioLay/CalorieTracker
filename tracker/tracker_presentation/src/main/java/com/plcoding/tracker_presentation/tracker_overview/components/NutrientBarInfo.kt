@@ -3,6 +3,7 @@ package com.plcoding.tracker_presentation.tracker_overview.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -48,31 +49,23 @@ fun NutrientBarInfo(
             )
         )
     }
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
         ) {
-            drawArc(
-                color = if(value <= goal) background else goalExceededColor,
-                startAngle = 0f,
-                sweepAngle = 360f,
-                useCenter = false,
-                size = size,
-                style = Stroke(
-                    width = strokeWidth.toPx(),
-                    cap = StrokeCap.Round
-                )
-            )
-            if(value <= goal) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+            ) {
                 drawArc(
-                    color = color,
-                    startAngle = 90f,
-                    sweepAngle = 360f * angleRatio.value,
+                    color = if(value <= goal) background else goalExceededColor,
+                    startAngle = 0f,
+                    sweepAngle = 360f,
                     useCenter = false,
                     size = size,
                     style = Stroke(
@@ -80,30 +73,55 @@ fun NutrientBarInfo(
                         cap = StrokeCap.Round
                     )
                 )
+                if(value <= goal) {
+                    drawArc(
+                        color = color,
+                        startAngle = 90f,
+                        sweepAngle = 360f * angleRatio.value,
+                        useCenter = false,
+                        size = size,
+                        style = Stroke(
+                            width = strokeWidth.toPx(),
+                            cap = StrokeCap.Round
+                        )
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                UnitDisplay(
+                    amount = value,
+                    unit = stringResource(id = R.string.grams),
+                    amountColor = if(value <= goal) {
+                        MaterialTheme.colors.onPrimary
+                    } else goalExceededColor,
+                    unitColor = if(value <= goal) {
+                        MaterialTheme.colors.onPrimary
+                    } else goalExceededColor
+                )
+                Text(
+                    text = name,
+                    color = if(value <= goal) {
+                        MaterialTheme.colors.onPrimary
+                    } else goalExceededColor,
+                    style = MaterialTheme.typography.body1,
+                    fontWeight = FontWeight.Light
+                )
             }
         }
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            UnitDisplay(
-                amount = value,
-                unit = stringResource(id = R.string.grams),
-                amountColor = if(value <= goal) {
-                    MaterialTheme.colors.onPrimary
-                } else goalExceededColor,
-                unitColor = if(value <= goal) {
-                    MaterialTheme.colors.onPrimary
-                } else goalExceededColor
-            )
-            Text(
-                text = name,
-                color = if(value <= goal) {
-                    MaterialTheme.colors.onPrimary
-                } else goalExceededColor,
-                style = MaterialTheme.typography.body1,
-                fontWeight = FontWeight.Light
-            )
-        }
+        UnitDisplay(
+            amount = value,
+            goal = goal,
+            unit = stringResource(id = R.string.grams),
+            amountColor = if(value <= goal) {
+                MaterialTheme.colors.onPrimary
+            } else goalExceededColor,
+            unitColor = if(value <= goal) {
+                MaterialTheme.colors.onPrimary
+            } else goalExceededColor
+        )
     }
+
 }

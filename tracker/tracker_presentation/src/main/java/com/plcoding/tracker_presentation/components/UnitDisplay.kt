@@ -16,6 +16,7 @@ import com.plcoding.core_ui.LocalSpacing
 @Composable
 fun UnitDisplay(
     amount: Int,
+    goal : Int = 0,
     unit: String,
     modifier: Modifier = Modifier,
     amountTextSize: TextUnit = 20.sp,
@@ -26,7 +27,7 @@ fun UnitDisplay(
     val spacing = LocalSpacing.current
     Row(modifier = modifier) {
         Text(
-            text = amount.toString(),
+            text = if (goal == 0) "$amount" else "$amount / $goal",
             style = MaterialTheme.typography.h1,
             fontSize = amountTextSize,
             color = amountColor,
