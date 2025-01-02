@@ -4,12 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
@@ -44,13 +50,49 @@ class MainActivity : ComponentActivity() {
             CaloryTrackerTheme {
                 val navController = rememberNavController()
                 val scaffoldState = rememberScaffoldState()
+
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    scaffoldState = scaffoldState
-                ) {
+                    scaffoldState = scaffoldState,
+                    topBar = {
+                        TopAppBar(
+                            backgroundColor = MaterialTheme.colors.primaryVariant,
+                            title = {
+                                Text("Title")
+                            },
+                            actions = {
+                                if (currentRoute == Route.TRACKER_OVERVIEW) {
+                                    IconButton(onClick = { navController.navigate(Route.SETTINGS) }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Settings,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            },
+                            navigationIcon = {
+                                if (currentRoute == Route.SETTINGS ||
+                                    currentRoute?.startsWith(Route.SEARCH) == true
+                                ) {
+                                    IconButton(onClick = { navController.navigateUp() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowBack,
+                                            contentDescription = "Navigate back"
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                    }
+                ) { padding ->
                     NavHost(
+                        modifier = Modifier.padding(padding),
                         navController = navController,
-                        startDestination = if(shouldShowOnboarding) {
+                        startDestination = if (shouldShowOnboarding) {
                             Route.WELCOME
                         } else Route.TRACKER_OVERVIEW
                     ) {
@@ -116,6 +158,13 @@ class MainActivity : ComponentActivity() {
                                                 "/$month" +
                                                 "/$year"
                                     )
+                                }
+                            )
+                        }
+                        composable(Route.SETTINGS) {
+                            NutrientGoalScreen(
+                                scaffoldState = scaffoldState,
+                                onNextClick = {
                                 }
                             )
                         }
